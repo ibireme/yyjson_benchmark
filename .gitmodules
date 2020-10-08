@@ -1,0 +1,15 @@
+[submodule "vendor/simdjson"]
+	path = vendor/simdjson
+	url = https://github.com/simdjson/simdjson.git
+[submodule "vendor/rapidjson"]
+	path = vendor/rapidjson
+	url = https://github.com/Tencent/rapidjson.git
+[submodule "vendor/sajson"]
+	path = vendor/sajson
+	url = https://github.com/chadaustin/sajson.git
+[submodule "vendor/cJSON"]
+	path = vendor/cJSON
+	url = https://github.com/DaveGamble/cJSON.git
+[submodule "vendor/yyjson"]
+	path = vendor/yyjson
+	url = https://github.com/ibireme/yyjson.git
