@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8'>
+<title>Report</title>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/highcharts/8.2.0/highcharts.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/highcharts/8.2.0/modules/series-label.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/highcharts/8.2.0/modules/exporting.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/highcharts/8.2.0/modules/export-data.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/highcharts/8.2.0/modules/offline-exporting.min.js'></script>
+<link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.0/css/bulma.min.css'>
+<style type='text/css'> hr { height: 1px; margin: 5px 0; background-color: #999999; } </style>
+</head>
+<body>
+<nav class='navbar is-light is-fixed-top' role='navigation' aria-label='main navigation'>
+    <div class='navbar-brand'>
+        <a class='navbar-item' href='#'>Report</a>
+        <a role='button' class='navbar-burger burger' aria-label='menu' data-target='main-menu'
+            onclick='document.querySelector(".navbar-menu").classList.toggle("is-active");'>
+            <span aria-hidden='true'></span>
+            <span aria-hidden='true'></span>
+            <span aria-hidden='true'></span>
+        </a>
+    </div>
+    <div id='main-menu' class='navbar-menu'>
+        <div class='navbar-start'>
+            <div class='navbar-item has-dropdown is-hoverable'>
+                <a class='navbar-link'>Info</a>
+                <div class='navbar-dropdown'>
+                    <a class='navbar-item'>Compiler: GCC 9.3.0</a>
+                    <a class='navbar-item'>OS: Linux 32-bit</a>
+                    <a class='navbar-item'>CPU: ARMv7 Processor rev 3 (v7l)</a>
+                    <a class='navbar-item'>CPU Frequency: 1500.11 MHz</a>
+                </div>
+            </div>
+            <div class='navbar-item has-dropdown is-hoverable'>
+                <a class='navbar-link'>Charts</a>
+                <div class='navbar-dropdown'>
+                    <a class='navbar-item' href='#chart_0'>JSON reader</a>
+                    <a class='navbar-item' href='#chart_1'>JSON reader (cpb)</a>
+                    <a class='navbar-item' href='#chart_2'>JSON writer pretty</a>
+                    <a class='navbar-item' href='#chart_3'>JSON writer minify</a>
+                    <a class='navbar-item' href='#chart_4'>JSON stats</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<a name='chart_0'></a>
+<div style='width: 60px; height: 60px; margin: 0 auto'></div>
+<div id='chart_id_0' style='width: 800px; height: 350px; margin: 0 auto'></div>
+<script type='text/javascript'>
+Highcharts.chart('chart_id_0', {
+    chart: { type: 'column' },
+    title: { text: 'JSON reader' },
+    subtitle: { text: 'gigabytes per second (larger is better)' },
+    credits: { enabled: false },
+    xAxis: { allowDecimals: true, categories: ['canada', 'citm_catalog', 'fgo', 'github_events', 'gsoc-2018', 'lottie', 'otfcc', 'poet', 'twitter', 'twitterescaped'], type: 'linear' },
+    yAxis: { title: { text: 'GB/s' }, allowDecimals: true, type: 'linear' },
+    tooltip: {valueDecimals: 2, valueSuffix: ' GB/s', shared: false, crosshairs: false, shadow: false },
+    legend: { layout: 'vertical', align: 'right', verticalAlign: 'middle', enabled: true },
+    plotOptions: {
+        column: { groupPadding: 0.100000, pointPadding: 0.000000, borderWidth: 0.000000, colorByPoint: false },
+        series: { label: { enabled: false}, dataLabels: { enabled: false , allowOverlap: true, format: '{point.y:.2f}' } }
+    },
+    series: [
+        { name: 'yyjson_fast', data: [0.145789, 0.279608, 0.147945, 0.163501, 0.207754, 0.131711, 0.173978, 0.608109, 0.201419, 0.191721] },
+        { name: 'yyjson', data: [0.058879, 0.229929, 0.064008, 0.158793, 0.186255, 0.113538, 0.060541, 0.468714, 0.167945, 0.161015] },
+        { name: 'sajson', data: [0.109676, 0.269670, 0.151446, 0.270798, 0.215258, 0.107721, 0.113818, 0.299517, 0.229385, 0.215283] },
+        { name: 'rapidjson', data: [0.035589, 0.154005, 0.049341, 0.109492, 0.125203, 0.051837, 0.050660, 0.112601, 0.108734, 0.100150] },
+        { name: 'cjson', data: [0.016948, 0.105143, 0.023055, 0.074065, 0.116602, 0.017120, 0.024595, 0.105082, 0.082189, 0.059731] }
+    ]
+});
+</script>
+
+<a name='chart_1'></a>
+<div style='width: 60px; height: 60px; margin: 0 auto'></div>
+<div id='chart_id_1' style='width: 800px; height: 350px; margin: 0 auto'></div>
+<script type='text/javascript'>
+Highcharts.chart('chart_id_1', {
+    chart: { type: 'column' },
+    title: { text: 'JSON reader (cpb)' },
+    subtitle: { text: 'cycles per byte (smaller is better)' },
+    credits: { enabled: false },
+    xAxis: { allowDecimals: true, categories: ['canada', 'citm_catalog', 'fgo', 'github_events', 'gsoc-2018', 'lottie', 'otfcc', 'poet', 'twitter', 'twitterescaped'], type: 'linear' },
+    yAxis: { title: { text: 'cycles' }, allowDecimals: true, type: 'linear' },
+    tooltip: {valueDecimals: 2, valueSuffix: ' cycles/byte', shared: false, crosshairs: false, shadow: false },
+    legend: { layout: 'vertical', align: 'right', verticalAlign: 'middle', enabled: true },
+    plotOptions: {
+        column: { groupPadding: 0.100000, pointPadding: 0.000000, borderWidth: 0.000000, colorByPoint: false },
+        series: { label: { enabled: false}, dataLabels: { enabled: false , allowOverlap: true, format: '{point.y:.2f}' } }
+    },
+    series: [
+        { name: 'yyjson_fast', data: [9.582886, 4.996587, 9.443278, 8.544806, 6.724687, 10.607181, 8.030240, 2.297425, 6.936216, 7.287053] },
+        { name: 'yyjson', data: [23.727970, 6.076156, 21.826601, 8.798157, 7.500925, 12.304953, 23.076618, 2.980674, 8.318708, 8.676715] },
+        { name: 'sajson', data: [12.738307, 5.180713, 9.224992, 5.159129, 6.490283, 12.969524, 12.274750, 4.664456, 6.090568, 6.489532] },
+        { name: 'rapidjson', data: [39.256508, 9.071676, 28.314577, 12.759630, 11.158526, 26.951481, 27.577557, 12.407375, 12.848627, 13.949959] },
+        { name: 'cjson', data: [82.432137, 13.287465, 60.599018, 18.863064, 11.981645, 81.607277, 56.803307, 13.295173, 16.998480, 23.389521] }
+    ]
+});
+</script>
+
+<a name='chart_2'></a>
+<div style='width: 60px; height: 60px; margin: 0 auto'></div>
+<div id='chart_id_2' style='width: 800px; height: 350px; margin: 0 auto'></div>
+<script type='text/javascript'>
+Highcharts.chart('chart_id_2', {
+    chart: { type: 'column' },
+    title: { text: 'JSON writer pretty' },
+    subtitle: { text: 'gigabytes per second (larger is better)' },
+    credits: { enabled: false },
+    xAxis: { allowDecimals: true, categories: ['canada', 'citm_catalog', 'fgo', 'github_events', 'gsoc-2018', 'lottie', 'otfcc', 'poet', 'twitter', 'twitterescaped'], type: 'linear' },
+    yAxis: { title: { text: 'GB/s' }, allowDecimals: true, type: 'linear' },
+    tooltip: {valueDecimals: 2, valueSuffix: ' GB/s', shared: false, crosshairs: false, shadow: false },
+    legend: { layout: 'vertical', align: 'right', verticalAlign: 'middle', enabled: true },
+    plotOptions: {
+        column: { groupPadding: 0.100000, pointPadding: 0.000000, borderWidth: 0.000000, colorByPoint: false },
+        series: { label: { enabled: false}, dataLabels: { enabled: false , allowOverlap: true, format: '{point.y:.2f}' } }
+    },
+    series: [
+        { name: 'yyjson', data: [0.018232, 0.545282, 0.331068, 0.397958, 0.376666, 0.100710, 0.217340, 0.373902, 0.401912, 0.395681] },
+        { name: 'yyjson_mut', data: [0.067055, 0.351669, 0.164563, 0.332331, 0.371971, 0.059605, 0.206134, 0.362152, 0.270657, 0.246352] },
+        { name: 'rapidjson', data: [0.037241, 0.149675, 0.153002, 0.194010, 0.173548, 0.057252, 0.117186, 0.200688, 0.151936, 0.151883] },
+        { name: 'cjson', data: [0.003847, 0.021785, 0.014021, 0.081622, 0.098420, 0.011523, 0.015615, 0.204082, 0.060904, 0.061004] }
+    ]
+});
+</script>
+
+<a name='chart_3'></a>
+<div style='width: 60px; height: 60px; margin: 0 auto'></div>
+<div id='chart_id_3' style='width: 800px; height: 350px; margin: 0 auto'></div>
+<script type='text/javascript'>
+Highcharts.chart('chart_id_3', {
+    chart: { type: 'column' },
+    title: { text: 'JSON writer minify' },
+    subtitle: { text: 'gigabytes per second (larger is better)' },
+    credits: { enabled: false },
+    xAxis: { allowDecimals: true, categories: ['canada', 'citm_catalog', 'fgo', 'github_events', 'gsoc-2018', 'lottie', 'otfcc', 'poet', 'twitter', 'twitterescaped'], type: 'linear' },
+    yAxis: { title: { text: 'GB/s' }, allowDecimals: true, type: 'linear' },
+    tooltip: {valueDecimals: 2, valueSuffix: ' GB/s', shared: false, crosshairs: false, shadow: false },
+    legend: { layout: 'vertical', align: 'right', verticalAlign: 'middle', enabled: true },
+    plotOptions: {
+        column: { groupPadding: 0.100000, pointPadding: 0.000000, borderWidth: 0.000000, colorByPoint: false },
+        series: { label: { enabled: false}, dataLabels: { enabled: false , allowOverlap: true, format: '{point.y:.2f}' } }
+    },
+    series: [
+        { name: 'yyjson', data: [0.004777, 0.223258, 0.233557, 0.320429, 0.306321, 0.012932, 0.129282, 0.340267, 0.316939, 0.310822] },
+        { name: 'yyjson_mut', data: [0.054948, 0.150236, 0.164202, 0.304269, 0.361137, 0.033295, 0.121379, 0.356645, 0.231747, 0.205812] },
+        { name: 'rapidjson', data: [0.128075, 0.251971, 0.234028, 0.206701, 0.175619, 0.219210, 0.173300, 0.202351, 0.170183, 0.170427] },
+        { name: 'cjson', data: [0.003629, 0.013745, 0.010832, 0.075481, 0.097951, 0.005558, 0.008250, 0.206087, 0.049179, 0.053511] }
+    ]
+});
+</script>
+
+<a name='chart_4'></a>
+<div style='width: 60px; height: 60px; margin: 0 auto'></div>
+<div id='chart_id_4' style='width: 800px; height: 350px; margin: 0 auto'></div>
+<script type='text/javascript'>
+Highcharts.chart('chart_id_4', {
+    chart: { type: 'column' },
+    title: { text: 'JSON stats' },
+    subtitle: { text: 'value count per seconds (larger is better)' },
+    credits: { enabled: false },
+    xAxis: { allowDecimals: true, categories: ['canada', 'citm_catalog', 'fgo', 'github_events', 'gsoc-2018', 'lottie', 'otfcc', 'poet', 'twitter', 'twitterescaped'], type: 'linear' },
+    yAxis: { title: { text: 'value count' }, allowDecimals: true, type: 'linear' },
+    tooltip: {valueDecimals: 2, shared: false, crosshairs: false, shadow: false },
+    legend: { layout: 'vertical', align: 'right', verticalAlign: 'middle', enabled: true },
+    plotOptions: {
+        column: { groupPadding: 0.100000, pointPadding: 0.000000, borderWidth: 0.000000, colorByPoint: false },
+        series: { label: { enabled: false}, dataLabels: { enabled: false , allowOverlap: true, format: '{point.y:.2f}' } }
+    },
+    series: [
+        { name: 'yyjson', data: [96863752.000000, 107511720.000000, 144692944.000000, 193916480.000000, 228439536.000000, 127168704.000000, 124158936.000000, 178682672.000000, 174737008.000000, 178163216.000000] },
+        { name: 'sajson', data: [93348312.000000, 91578328.000000, 138156208.000000, 166214112.000000, 189604816.000000, 105614688.000000, 94985608.000000, 174689776.000000, 140510176.000000, 140510176.000000] },
+        { name: 'rapidjson', data: [67659584.000000, 116144048.000000, 143942176.000000, 122473560.000000, 100853624.000000, 75906904.000000, 101502536.000000, 69954072.000000, 96663024.000000, 109035888.000000] },
+        { name: 'cjson', data: [44822208.000000, 81808400.000000, 95362824.000000, 83107056.000000, 46076504.000000, 63057896.000000, 78530200.000000, 47885864.000000, 65684272.000000, 63540728.000000] }
+    ]
+});
+</script>
+
+</body>
+</html>
