@@ -45,7 +45,7 @@ cmake .. -G Xcode -DCMAKE_SYSTEM_NAME=iOS
 If you want to build for arm64 device, you should add flag`-DSIMDJSON_IMPLEMENTATION=arm64` for `simdjson`.
 
 # Reports
-See [yyjson_benchmark/report](https://github.com/ibireme/yyjson_benchmark/tree/master/report) for some benchmark reports.
+See [yyjson_benchmark/report](https://github.com/ibireme/yyjson_benchmark/tree/master/docs/reports) for some benchmark reports.
 
 # JSON Datasets
 
