@@ -22,7 +22,7 @@ Build and run:
 mkdir build
 cd build
 cmake ..
-make
+cmake --build .
 ./yyjson_benchmark -o report.html
 ```
 
@@ -45,7 +45,16 @@ cmake .. -G Xcode -DCMAKE_SYSTEM_NAME=iOS
 If you want to build for arm64 device, you should add flag`-DSIMDJSON_IMPLEMENTATION=arm64` for `simdjson`.
 
 # Reports
-See [yyjson_benchmark/report](https://github.com/ibireme/yyjson_benchmark/tree/master/docs/reports) for some benchmark reports.
+Benchmark reports with interactive charts:
+* [Apple A12 clang](https://ibireme.github.io/yyjson_benchmark/reports/Apple_A12_clang.html)
+* [Intel NUC 8i5 clang (Ubuntu 20.04)](https://ibireme.github.io/yyjson_benchmark/reports/Intel_NUC_8i5_clang.html)
+* [Intel NUC 8i5 gcc (Ubuntu 20.04)](https://ibireme.github.io/yyjson_benchmark/reports/Intel_NUC_8i5_gcc.html)
+* [Intel NUC 8i5 msvc (Windows 10 2004)](https://ibireme.github.io/yyjson_benchmark/reports/Intel_NUC_8i5_msvc.html)
+* [Raspberry Pi 4 clang (Ubuntu 20.04 arm64)](https://ibireme.github.io/yyjson_benchmark/reports/Raspberry_Pi_4_arm64_clang.html)
+* [Raspberry Pi 4 clang (Ubuntu 20.04 armv7)](https://ibireme.github.io/yyjson_benchmark/reports/Raspberry_Pi_4_armv7_clang.html)
+* [Raspberry Pi 4 gcc (Ubuntu 20.04 arm64)](https://ibireme.github.io/yyjson_benchmark/reports/Raspberry_Pi_4_arm64_gcc.html)
+* [Raspberry Pi 4 gcc (Ubuntu 20.04 armv7)](https://ibireme.github.io/yyjson_benchmark/reports/Raspberry_Pi_4_armv7_gcc.html)
+
 
 # JSON Datasets
 
