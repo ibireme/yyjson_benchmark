@@ -17,6 +17,16 @@ if(NOT XCODE)
     set(CMAKE_CXX_STANDARD 17)
 endif()
 
+if (CMAKE_BUILD_TYPE MATCHES "Release")
+    include(CheckCXXCompilerFlag)
+    CHECK_CXX_COMPILER_FLAG("-march=native" COMPILER_SUPPORT_NATIVE_ARCH)
+    if (COMPILER_SUPPORT_NATIVE_ARCH)
+        message("Add -march=native flag")
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=native")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
+    endif()
+endif()
+
 # ------------------------------------------------------------------------------
 # executable
 add_executable(run_benchmark "")
