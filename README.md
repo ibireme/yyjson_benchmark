@@ -22,7 +22,7 @@ Build and run:
 mkdir build
 cd build
 cmake ..
-cmake --build .
+cmake --build . --config Release
 ./yyjson_benchmark -o report.html
 ```
 
