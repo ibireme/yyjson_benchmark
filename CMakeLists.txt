@@ -17,6 +17,10 @@ if(NOT XCODE)
     set(CMAKE_CXX_STANDARD 17)
 endif()
 
+if(MSVC)
+    string(APPEND CMAKE_CXX_FLAGS " /Zc:__cplusplus")
+endif()
+
 if (CMAKE_BUILD_TYPE MATCHES "Release")
     include(CheckCXXCompilerFlag)
     CHECK_CXX_COMPILER_FLAG("-march=native" COMPILER_SUPPORT_NATIVE_ARCH)
