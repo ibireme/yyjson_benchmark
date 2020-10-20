@@ -53,9 +53,6 @@ static void func_register_all(void) {
     register_stats(simdjson);
 #endif
     
-    register_reader(sajson);
-    register_stats(sajson);
-    
     register_reader(rapidjson);       // validate_encoding, full_precision_fp
     register_writer(rapidjson);
     register_stats(rapidjson);        // stats recursive
@@ -66,37 +63,38 @@ static void func_register_all(void) {
     
     
     // full
+    /*
+    register_reader(yyjson_fast); // validate_encoding, insitu, fast_fp
+    register_reader(yyjson);      // validate_encoding, full_precision_fp
+    register_writer(yyjson);      // immutable writer
+    register_writer(yyjson_mut);  // mutable writer
+    register_stats(yyjson_fast);  // stats iterator
+    register_stats(yyjson);       // stats recursive
+
+#if BENCHMARK_HAS_SIMDJSON
+    register_reader(simdjson);
+    register_writer(simdjson); // immutable writer, minify only
+    register_stats(simdjson);
+#endif
     
-//    register_reader(yyjson_fast); // validate_encoding, insitu, fast_fp
-//    register_reader(yyjson);      // validate_encoding, full_precision_fp
-//    register_writer(yyjson);      // immutable writer
-//    register_writer(yyjson_mut);  // mutable writer
-//    register_stats(yyjson_fast);  // stats iterator
-//    register_stats(yyjson);       // stats recursive
-//
-//#if BENCHMARK_HAS_SIMDJSON
-//    register_reader(simdjson);
-//    register_writer(simdjson); // immutable writer, minify only
-//    register_stats(simdjson);
-//#endif
-//    
-//    register_reader(sajson);
-//    register_reader(sajson_dynamic);
-//    register_stats(sajson);
-//
-//    register_reader(rapidjson);       // validate_encoding, full_precision_fp
-//    register_reader(rapidjson_fast);  // no_validate_encoding, insitu, fast_fp
-//    register_writer(rapidjson);
-//    register_stats(rapidjson_fast);   // stats with handler
-//    register_stats(rapidjson);        // stats recursive
-//
-//    register_reader(cjson);
-//    register_writer(cjson);
-//    register_stats(cjson);
-//
-//    register_reader(jansson);
-//    register_writer(jansson);
-//    register_stats(jansson);
+    register_reader(sajson);
+    register_reader(sajson_dynamic);
+    register_stats(sajson);
+
+    register_reader(rapidjson);       // validate_encoding, full_precision_fp
+    register_reader(rapidjson_fast);  // no_validate_encoding, insitu, fast_fp
+    register_writer(rapidjson);
+    register_stats(rapidjson_fast);   // stats with handler
+    register_stats(rapidjson);        // stats recursive
+
+    register_reader(cjson);
+    register_writer(cjson);
+    register_stats(cjson);
+
+    register_reader(jansson);
+    register_writer(jansson);
+    register_stats(jansson);
+     */
 }
 
 static void func_cleanup(void) {
@@ -389,6 +387,12 @@ static void run_all_benchmark(const char *output_path) {
     int file_count = 0;
     char **files = yy_dir_read_full(path, &file_count);
     
+#if TWITTER_ONLY
+    file_count = 1;
+    yy_path_combine(path, BENCHMARK_DATA_PATH, "data", "json", "twitter.json", NULL);
+    files[0] = path;
+#endif
+
     yy_report *report = yy_report_new();
     yy_report_add_env_info(report);
     
@@ -402,7 +406,10 @@ static void run_all_benchmark(const char *output_path) {
         printf("write report file failed: %s\n", output_path);
     }
     yy_report_free(report);
+    
+#if !TWITTER_ONLY
     yy_dir_free(files);
+#endif
 }
 
 void benchmark(const char *output_path) {
