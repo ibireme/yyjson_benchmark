@@ -40,11 +40,11 @@ static void func_register_all(void) {
     if ((int)strlen(#name) > stats_name_max) stats_name_max = (int)strlen(#name);
     
     
+    
+    // fast
     register_reader(yyjson_fast); // validate_encoding, insitu, fast_fp
     register_reader(yyjson);      // validate_encoding, full_precision_fp
     register_writer(yyjson);      // immutable writer
-    register_writer(yyjson_mut);  // mutable writer
-    register_stats(yyjson_fast);  // stats iterator
     register_stats(yyjson);       // stats recursive
     
 #if BENCHMARK_HAS_SIMDJSON
@@ -54,22 +54,49 @@ static void func_register_all(void) {
 #endif
     
     register_reader(sajson);
-    register_reader(sajson_dynamic);
     register_stats(sajson);
     
     register_reader(rapidjson);       // validate_encoding, full_precision_fp
-    register_reader(rapidjson_fast);  // no_validate_encoding, insitu, fast_fp
     register_writer(rapidjson);
-    register_stats(rapidjson_fast);   // stats with handler
     register_stats(rapidjson);        // stats recursive
     
-    register_reader(cjson);
     register_writer(cjson);
     register_stats(cjson);
     
-    register_reader(jansson);
-    register_writer(jansson);
-    register_stats(jansson);
+    
+    
+    // full
+    
+//    register_reader(yyjson_fast); // validate_encoding, insitu, fast_fp
+//    register_reader(yyjson);      // validate_encoding, full_precision_fp
+//    register_writer(yyjson);      // immutable writer
+//    register_writer(yyjson_mut);  // mutable writer
+//    register_stats(yyjson_fast);  // stats iterator
+//    register_stats(yyjson);       // stats recursive
+//
+//#if BENCHMARK_HAS_SIMDJSON
+//    register_reader(simdjson);
+//    register_writer(simdjson); // immutable writer, minify only
+//    register_stats(simdjson);
+//#endif
+//    
+//    register_reader(sajson);
+//    register_reader(sajson_dynamic);
+//    register_stats(sajson);
+//
+//    register_reader(rapidjson);       // validate_encoding, full_precision_fp
+//    register_reader(rapidjson_fast);  // no_validate_encoding, insitu, fast_fp
+//    register_writer(rapidjson);
+//    register_stats(rapidjson_fast);   // stats with handler
+//    register_stats(rapidjson);        // stats recursive
+//
+//    register_reader(cjson);
+//    register_writer(cjson);
+//    register_stats(cjson);
+//
+//    register_reader(jansson);
+//    register_writer(jansson);
+//    register_stats(jansson);
 }
 
 static void func_cleanup(void) {
