@@ -24,6 +24,38 @@ u64 reader_measure_simdjson(const char *json, size_t size, int repeat) {
 }
 
 
+
+// -----------------------------------------------------------------------------
+// writer
+
+u64 writer_measure_simdjson(const char *json, size_t size, size_t *out_size,
+                            bool *roundtrip, bool pretty, int repeat) {
+    if (pretty) return 0;
+    
+    benchmark_tick_init();
+    
+    simdjson::dom::parser parser;
+    simdjson::dom::element doc;
+    doc = parser.parse(json, size);
+    
+    bool processed = false;
+    for (int i = 0; i < repeat; i++) {
+        benchmark_tick_begin();
+        auto str = simdjson::minify(doc);
+        benchmark_tick_end();
+        if (str.length() == 0) return 0;
+        if (!processed) {
+            processed = true;
+            *out_size = str.length();
+            *roundtrip = (*out_size == size && memcmp(json, str.c_str(), size) == 0);
+        }
+    }
+    
+    return benchmark_tick_min();
+}
+
+
+
 // -----------------------------------------------------------------------------
 // stats
 

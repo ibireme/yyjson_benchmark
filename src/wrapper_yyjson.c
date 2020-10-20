@@ -57,17 +57,22 @@ u64 reader_measure_yyjson_fast(const char *json, size_t size, int repeat) {
 // writer
 
 u64 writer_measure_yyjson(const char *json, size_t size, size_t *out_size,
-                          bool pretty, int repeat) {
+                          bool *roundtrip, bool pretty, int repeat) {
     benchmark_tick_init();
     
     yyjson_doc *doc = yyjson_read(json, size, YYJSON_READ_NOFLAG);
     yyjson_write_flag flag = pretty ? YYJSON_WRITE_PRETTY : YYJSON_WRITE_NOFLAG;
     
+    bool processed = false;
     for (int i = 0; i < repeat; i++) {
         benchmark_tick_begin();
         char *str = yyjson_write(doc, flag, out_size);
         benchmark_tick_end();
         if (!str) return 0;
+        if (!processed) {
+            processed = true;
+            *roundtrip = (*out_size == size && memcmp(json, str, size) == 0);
+        }
         free(str);
     }
     yyjson_doc_free(doc);
@@ -76,18 +81,24 @@ u64 writer_measure_yyjson(const char *json, size_t size, size_t *out_size,
 }
 
 u64 writer_measure_yyjson_mut(const char *json, size_t size, size_t *out_size,
-                              bool pretty, int repeat) {
+                              bool *roundtrip, bool pretty, int repeat) {
     benchmark_tick_init();
     
     yyjson_doc *doc = yyjson_read(json, size, YYJSON_READ_NOFLAG);
     yyjson_mut_doc *mdoc = yyjson_doc_mut_copy(doc, NULL);
     yyjson_write_flag flag = pretty ? YYJSON_WRITE_PRETTY : YYJSON_WRITE_NOFLAG;
     
+    bool processed = false;
     for (int i = 0; i < repeat; i++) {
         benchmark_tick_begin();
         char *str = yyjson_mut_write(mdoc, flag, out_size);
         benchmark_tick_end();
         if (!str) return 0;
+        if (!processed) {
+            processed = true;
+            *out_size = strlen(str);
+            *roundtrip = (*out_size == size && memcmp(json, str, size) == 0);
+        }
         free(str);
     }
     yyjson_doc_free(doc);

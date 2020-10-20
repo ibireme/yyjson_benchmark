@@ -13,3 +13,12 @@
 [submodule "vendor/yyjson"]
 	path = vendor/yyjson
 	url = https://github.com/ibireme/yyjson.git
+[submodule "vendor/jsmn"]
+	path = vendor/jsmn
+	url = https://github.com/zserge/jsmn.git
+[submodule "vendor/json-c"]
+	path = vendor/json-c
+	url = https://github.com/json-c/json-c.git
+[submodule "vendor/jansson"]
+	path = vendor/jansson
+	url = https://github.com/akheron/jansson.git

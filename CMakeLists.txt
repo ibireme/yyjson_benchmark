@@ -74,6 +74,15 @@ set(YYJSON_DISABLE_INF_AND_NAN_READER ON CACHE INTERNAL "")
 add_subdirectory(vendor/yyjson)
 target_link_libraries(run_benchmark yyjson)
 
+# jansson
+set(JANSSON_EXAMPLES OFF CACHE INTERNAL "")
+set(JANSSON_BUILD_DOCS OFF CACHE INTERNAL "")
+set(JANSSON_INSTALL OFF CACHE INTERNAL "")
+set(JANSSON_WITHOUT_TESTS ON CACHE INTERNAL "")
+add_subdirectory(vendor/jansson)
+target_link_libraries(run_benchmark jansson)
+include_directories("${jansson_BINARY_DIR}/include")
+
 # cjson
 add_library(cjson STATIC 
     vendor/cJSON/cJSON.h 
@@ -110,12 +119,9 @@ if(MSVC)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
     endif()
     add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-    add_definitions(-DBENCHMARK_DATA_PATH="${CMAKE_CURRENT_BINARY_DIR}")
-    if(BENCHMARK_HAS_SIMDJSON)
-        add_definitions(-DBENCHMARK_HAS_SIMDJSON=1)
-    endif()
+endif()
 
-elseif(XCODE)
+if(XCODE)
     list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
     include(XcodeProperty)
 
@@ -146,8 +152,9 @@ elseif(XCODE)
     set_xcode_property(run_benchmark OTHER_CFLAGS[variant=Release] ${XCODE_CFLAGS})
     set_xcode_property(run_benchmark OTHER_CPLUSPLUSFLAGS[variant=Debug] "$(OTHER_CFLAGS)")
     set_xcode_property(run_benchmark OTHER_CPLUSPLUSFLAGS[variant=Release] "$(OTHER_CFLAGS)")
+endif()
 
-else()
+if(NOT XCODE)
     if(BENCHMARK_HAS_SIMDJSON)
         add_definitions(-DBENCHMARK_HAS_SIMDJSON=1)
     endif()

@@ -76,12 +76,13 @@ u64 reader_measure_rapidjson_fast(const char *json, size_t size, int repeat) {
 // writer
 
 u64 writer_measure_rapidjson(const char *json, size_t size, size_t *out_size,
-                             bool pretty, int repeat) {
+                             bool *roundtrip, bool pretty, int repeat) {
     benchmark_tick_init();
     
     Document doc;
     doc.Parse<kParseValidateEncodingFlag | kParseFullPrecisionFlag>(json, size);
     
+    bool processed = false;
     if (pretty) {
         for (int i = 0; i < repeat; i++) {
             StringBuffer sb;
@@ -89,7 +90,11 @@ u64 writer_measure_rapidjson(const char *json, size_t size, size_t *out_size,
             benchmark_tick_begin();
             doc.Accept(writer);
             benchmark_tick_end();
-            *out_size = sb.GetSize();
+            if (!processed) {
+                processed = true;
+                *out_size = sb.GetSize();
+                *roundtrip = (*out_size == size && memcmp(json, sb.GetString(), size) == 0);
+            }
         }
     } else {
         for (int i = 0; i < repeat; i++) {
@@ -99,6 +104,11 @@ u64 writer_measure_rapidjson(const char *json, size_t size, size_t *out_size,
             doc.Accept(writer);
             benchmark_tick_end();
             *out_size = sb.GetSize();
+            if (!processed) {
+                processed = true;
+                *out_size = sb.GetSize();
+                *roundtrip = (*out_size == size && memcmp(json, sb.GetString(), size) == 0);
+            }
         }
     }
     

@@ -25,7 +25,8 @@ static void func_register_all(void) {
     if ((int)strlen(#name) > reader_name_max) reader_name_max = (int)strlen(#name);
     
 #define register_writer(name) \
-    extern u64 writer_measure_##name(const char *json, size_t size, size_t *out_size, bool pretty, int repeat); \
+    extern u64 writer_measure_##name(const char *json, size_t size, size_t *out_size, \
+                                     bool *roundtrip, bool pretty, int repeat); \
     writer_funcs[writer_num] = writer_measure_##name; \
     writer_names[writer_num] = #name; \
     writer_num++; \
@@ -39,31 +40,36 @@ static void func_register_all(void) {
     if ((int)strlen(#name) > stats_name_max) stats_name_max = (int)strlen(#name);
     
     
-    register_reader(yyjson_fast); // validate_encoding, fast_fp, insitu
+    register_reader(yyjson_fast); // validate_encoding, insitu, fast_fp
     register_reader(yyjson);      // validate_encoding, full_precision_fp
     register_writer(yyjson);      // immutable writer
     register_writer(yyjson_mut);  // mutable writer
-//    register_stats(yyjson_fast);  // stats iterator
+    register_stats(yyjson_fast);  // stats iterator
     register_stats(yyjson);       // stats recursive
     
 #if BENCHMARK_HAS_SIMDJSON
     register_reader(simdjson);
+    register_writer(simdjson); // immutable writer, minify only
     register_stats(simdjson);
 #endif
     
-//    register_reader(sajson);
-//    register_reader(sajson_dynamic);
-//    register_stats(sajson);
+    register_reader(sajson);
+    register_reader(sajson_dynamic);
+    register_stats(sajson);
     
     register_reader(rapidjson);       // validate_encoding, full_precision_fp
-//    register_reader(rapidjson_fast);  // no_validate_encoding, fast_fp, insitu
+    register_reader(rapidjson_fast);  // no_validate_encoding, insitu, fast_fp
     register_writer(rapidjson);
-//    register_stats(rapidjson_fast);   // stats with handler
+    register_stats(rapidjson_fast);   // stats with handler
     register_stats(rapidjson);        // stats recursive
     
-//    register_reader(cjson);
+    register_reader(cjson);
     register_writer(cjson);
     register_stats(cjson);
+    
+    register_reader(jansson);
+    register_writer(jansson);
+    register_stats(jansson);
 }
 
 static void func_cleanup(void) {
@@ -219,11 +225,12 @@ static void run_writer_benchmark(yy_report *report, char **file_paths, int file_
             int repeat = get_repeat_count(len);
             
             usize out_size;
-            u64 ticks = func(dat, len, &out_size, true, repeat);
+            bool roundtrip;
+            u64 ticks = func(dat, len, &out_size, &roundtrip, true, repeat);
             f64 gb_per_sec = (f64)out_size / ((f64)ticks / yy_cpu_get_tick_per_sec()) / 1024.0 / 1024.0 / 1024.0;
             yy_chart_item_add_float(chart_pretty, (f32)gb_per_sec);
             
-            ticks = func(dat, len, &out_size, false, repeat);
+            ticks = func(dat, len, &out_size, &roundtrip, false, repeat);
             gb_per_sec = (f64)out_size / ((f64)ticks / yy_cpu_get_tick_per_sec()) / 1024.0 / 1024.0 / 1024.0;
             yy_chart_item_add_float(chart_minify, (f32)gb_per_sec);
         }
@@ -293,6 +300,59 @@ static void run_stats_benchmark(yy_report *report, char **file_paths, int file_c
     yy_chart_free(chart);
 }
 
+// RFC 8259 JSON Test Suite
+// https://github.com/nst/JSONTestSuite
+static void run_conformance_benchmark(void) {
+    printf("\n");
+    printf("RFC 8259 JSON Test Suite: https://github.com/nst/JSONTestSuite\n");
+    
+    char path[YY_MAX_PATH];
+    yy_path_combine(path, BENCHMARK_DATA_PATH, "data", "parsing", NULL);
+    int file_count = 0;
+    char **files = yy_dir_read(path, &file_count);
+        
+    for (int f = 0; f < reader_num; f++) {
+        reader_measure_func func = reader_funcs[f];
+        const char *func_name = reader_names[f];
+        
+        int used_count = 0;
+        int valid_count = 0;
+        for (int i = 0; i < file_count; i++) {
+            char *json_name = files[i];
+            if (!yy_str_has_suffix(json_name, ".json")) continue;
+            
+            char json_path[YY_MAX_PATH];
+            yy_path_combine(json_path, path, json_name, NULL);
+            char *dat;
+            usize dat_len;
+            if (!yy_file_read(json_path, (u8 **)&dat, &dat_len)) continue;
+            used_count++;
+            
+            if (strncmp(func_name, "rapidjson", strlen("rapidjson")) == 0 &&
+                (strcmp(json_name, "n_structure_100000_opening_arrays.json") == 0 ||
+                 strcmp(json_name, "n_structure_open_array_object.json") == 0 ||
+                 strcmp(json_name, "n_structure_100000_opening_arrays.json") == 0)) {
+                // may crash
+            } else {
+                u64 suc = func(dat, dat_len, 1);
+                if (yy_str_has_prefix(json_name, "y_")) { //  must be accepted
+                    if (suc) valid_count++;
+                } else if (yy_str_has_prefix(json_name, "n_")) { // must be rejected
+                    if (!suc) valid_count++;
+                } else { // free to accept or reject
+                    valid_count++;
+                }
+            }
+            
+            free(dat);
+        }
+        
+        printf("%*s  (%d/%d)%s\n",reader_name_max, func_name, valid_count, used_count, valid_count == used_count ? " [OK]" : "");
+        
+    }
+    printf("\n");
+    yy_dir_free(files);
+}
 
 
 static void run_all_benchmark(const char *output_path) {
@@ -305,6 +365,7 @@ static void run_all_benchmark(const char *output_path) {
     yy_report *report = yy_report_new();
     yy_report_add_env_info(report);
     
+    run_conformance_benchmark();
     run_reader_benchmark(report, files, file_count);
     run_writer_benchmark(report, files, file_count);
     run_stats_benchmark(report, files, file_count);

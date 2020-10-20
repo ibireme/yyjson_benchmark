@@ -22,11 +22,13 @@ typedef u64 (*reader_measure_func)(const char *json, size_t size, int repeat);
  @param json JSON data in UTF-8 with null-terminator.
  @param size JSON data size in bytes.
  @param out_size JSON output size in bytes.
+ @param roundtrip JSON output same as input.
  @param repeat Loop count for meansure.
  @param pretty Pretty or minify.
  @return The ticks cost of one loop.
  */
-typedef u64 (*writer_measure_func)(const char *json, size_t size, size_t *out_size, bool pretty, int repeat);
+typedef u64 (*writer_measure_func)(const char *json, size_t size, size_t *out_size,
+                                   bool *roundtrip, bool pretty, int repeat);
 
 
 typedef struct {

@@ -23,18 +23,22 @@ u64 reader_measure_cjson(const char *json, size_t size, int repeat) {
 // writer
 
 u64 writer_measure_cjson(const char *json, size_t size, size_t *out_size,
-                          bool pretty, int repeat) {
+                         bool *roundtrip, bool pretty, int repeat) {
     benchmark_tick_init();
     
     cJSON *doc = cJSON_ParseWithLength(json, size);
-    
+    bool processed = false;
     if (pretty) {
         for (int i = 0; i < repeat; i++) {
             benchmark_tick_begin();
             char *str = cJSON_Print(doc);
             benchmark_tick_end();
             if (!str) return 0;
-            *out_size = strlen(str);
+            if (!processed) {
+                processed = true;
+                *out_size = strlen(str);
+                *roundtrip = (*out_size == size && memcmp(json, str, size) == 0);
+            }
             free(str);
         }
     } else {
@@ -43,7 +47,11 @@ u64 writer_measure_cjson(const char *json, size_t size, size_t *out_size,
             char *str = cJSON_PrintUnformatted(doc);
             benchmark_tick_end();
             if (!str) return 0;
-            *out_size = strlen(str);
+            if (!processed) {
+                processed = true;
+                *out_size = strlen(str);
+                *roundtrip = (*out_size == size && memcmp(json, str, size) == 0);
+            }
             free(str);
         }
     }
