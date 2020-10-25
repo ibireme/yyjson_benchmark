@@ -57,10 +57,6 @@ static void func_register_all(void) {
     register_writer(rapidjson);
     register_stats(rapidjson);        // stats recursive
     
-    register_writer(cjson);
-    register_stats(cjson);
-    
-    
     
     // full
     /*
