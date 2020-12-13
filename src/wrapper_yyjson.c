@@ -22,7 +22,7 @@ u64 reader_measure_yyjson(const char *json, size_t size, int repeat) {
 u64 reader_measure_yyjson_fast(const char *json, size_t size, int repeat) {
     benchmark_tick_init();
     
-    yyjson_read_flag flag = YYJSON_READ_FASTFP | YYJSON_READ_INSITU;
+    yyjson_read_flag flag = YYJSON_READ_INSITU;
     
     // use custom allocator
     usize buf_size = yyjson_read_max_memory_usage(size, flag);
