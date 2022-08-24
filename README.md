@@ -23,7 +23,7 @@ mkdir build
 cd build
 cmake ..
 cmake --build . --config Release
-./yyjson_benchmark -o report.html
+./run_benchmark -o report.html
 ```
 
 If you want to build with other compiler or IDE, try these commands:
