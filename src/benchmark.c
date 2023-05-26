@@ -44,19 +44,23 @@ static void func_register_all(void) {
     // fast
     register_reader(yyjson_fast); // validate_encoding, insitu, fast_fp
     register_reader(yyjson);      // validate_encoding, full_precision_fp
-    register_writer(yyjson);      // immutable writer
-    register_stats(yyjson);       // stats recursive
+    //register_writer(yyjson);      // immutable writer
+    //register_stats(yyjson);       // stats recursive
     
 #if BENCHMARK_HAS_SIMDJSON
     register_reader(simdjson);
-    register_writer(simdjson); // immutable writer, minify only
-    register_stats(simdjson);
+    //register_writer(simdjson); // immutable writer, minify only
+    //register_stats(simdjson);
 #endif
     
     register_reader(rapidjson);       // validate_encoding, full_precision_fp
-    register_writer(rapidjson);
-    register_stats(rapidjson);        // stats recursive
-    
+    //register_writer(rapidjson);
+    //register_stats(rapidjson);        // stats recursive
+
+#if BENCHMARK_HAS_WINRT
+    register_reader(winrt_json);
+    //register_writer(winrt_json);
+#endif
     
     // full
     /*
