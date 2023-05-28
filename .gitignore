@@ -100,3 +100,4 @@ x64
 Debug
 Release
 *.user
+CMakeSettings.json
