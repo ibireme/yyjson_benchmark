@@ -117,18 +117,6 @@ if(MSVC AND ("${CMAKE_SIZEOF_VOID_P}" EQUAL "8"))
     ${CMAKE_CURRENT_LIST_DIR}/src/winrt_json/packages/Microsoft.Windows.CppWinRT.2.0.220531.1/bin/cppwinrt.exe
     ${CMAKE_CURRENT_LIST_DIR}/src/winrt_json/packages/Microsoft.Windows.CppWinRT.2.0.220531.1/build/native/cppwinrt.exe)
 
-    # These does not work
-    # set(CMAKE_VS_NUGET_PACKAGE_RESTORE ON CACHE BOOL "")
-    # set(CMAKE_VS_NUGET_PACKAGE_RESTORE ON)
-    
-    # message("\"${CMAKE_VS_MSBUILD_COMMAND}\" \"${CMAKE_CURRENT_LIST_DIR}/src/winrt_json/winrt_json.vcxproj\" -t:restore -p:configuration=debug -p:platform=x64 -p:RestorePackagesConfig=true")
-    # add_custom_target(restore_nuget ${CMAKE_VS_MSBUILD_COMMAND} "${CMAKE_CURRENT_LIST_DIR}/src/winrt_json/winrt_json.vcxproj" -t:restore -p:platform=x64 -p:RestorePackagesConfig=true)
-    # add_custom_command(TARGET restore_nuget COMMAND 
-    #     ${CMAKE_COMMAND} -E copy
-    #     ${CMAKE_CURRENT_LIST_DIR}/src/winrt_json/packages/Microsoft.Windows.CppWinRT.2.0.220531.1/bin/cppwinrt.exe
-    #     ${CMAKE_CURRENT_LIST_DIR}/src/winrt_json/packages/Microsoft.Windows.CppWinRT.2.0.220531.1/build/native/cppwinrt.exe
-    # )
-    # include_external_msproject(winrt_json ${CMAKE_CURRENT_LIST_DIR}/src/winrt_json/winrt_json.vcxproj restore_nuget)
 
     include_external_msproject(winrt_json ${CMAKE_CURRENT_LIST_DIR}/src/winrt_json/winrt_json.vcxproj)
     set(BENCHMARK_HAS_WINRT ON) 
@@ -136,14 +124,6 @@ if(MSVC AND ("${CMAKE_SIZEOF_VOID_P}" EQUAL "8"))
 
 
     add_definitions(-DBENCHMARK_HAS_WINRT=1)
-    message(${CMAKE_BUILD_TYPE})
-    # if(${CMAKE_BUILD_TYPE} MATCHES Debug)
-    #     message(debugbuild)
-    #     target_link_libraries(run_benchmark "${CMAKE_CURRENT_LIST_DIR}/src/winrt_json/x64/$<$<CONFIG:Debug>:Release>$<$<CONFIG:Release>:Debug>/winrt_json.lib")
-    # elseif(${CMAKE_BUILD_TYPE} MATCHES Release)
-    #     message(releasebuild)
-    #     target_link_libraries(run_benchmark "${CMAKE_CURRENT_LIST_DIR}/src/winrt_json/x64/$<$<CONFIG:Debug>:Release>$<$<CONFIG:Release>:Debug>/winrt_json.lib")
-    # endif()
     target_link_libraries(run_benchmark "${CMAKE_CURRENT_LIST_DIR}/src/winrt_json/x64/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/winrt_json.lib") 
     add_dependencies(run_benchmark winrt_json)
 endif()
