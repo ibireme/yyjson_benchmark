@@ -106,6 +106,27 @@ if(("${CMAKE_SIZEOF_VOID_P}" EQUAL "8"))
     set(BENCHMARK_HAS_SIMDJSON ON)
 endif()
 
+# winrt_json
+if(MSVC AND ("${CMAKE_SIZEOF_VOID_P}" EQUAL "8"))
+
+    execute_process(COMMAND ${CMAKE_VS_MSBUILD_COMMAND} "${CMAKE_CURRENT_LIST_DIR}/src/winrt_json/winrt_json.vcxproj" -t:restore -p:platform=x64 -p:RestorePackagesConfig=true)
+    execute_process(COMMAND 
+    ${CMAKE_COMMAND} 
+    -E 
+    copy 
+    ${CMAKE_CURRENT_LIST_DIR}/src/winrt_json/packages/Microsoft.Windows.CppWinRT.2.0.220531.1/bin/cppwinrt.exe
+    ${CMAKE_CURRENT_LIST_DIR}/src/winrt_json/packages/Microsoft.Windows.CppWinRT.2.0.220531.1/build/native/cppwinrt.exe)
+
+
+    include_external_msproject(winrt_json ${CMAKE_CURRENT_LIST_DIR}/src/winrt_json/winrt_json.vcxproj)
+    set(BENCHMARK_HAS_WINRT ON) 
+    set_property(TARGET winrt_json PROPERTY VS_PACKAGE_REFERENCES "Microsoft.Windows.CppWinRT.2.0.220531.1")
+
+
+    add_definitions(-DBENCHMARK_HAS_WINRT=1)
+    target_link_libraries(run_benchmark "${CMAKE_CURRENT_LIST_DIR}/src/winrt_json/x64/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/winrt_json.lib") 
+    add_dependencies(run_benchmark winrt_json)
+endif()
 
 
 # ------------------------------------------------------------------------------

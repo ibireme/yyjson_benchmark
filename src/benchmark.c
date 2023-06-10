@@ -56,7 +56,12 @@ static void func_register_all(void) {
     register_reader(rapidjson);       // validate_encoding, full_precision_fp
     register_writer(rapidjson);
     register_stats(rapidjson);        // stats recursive
-    
+
+#if BENCHMARK_HAS_WINRT
+    register_reader(winrt_json);
+    register_writer(winrt_json);
+    register_stats(winrt_json);
+#endif
     
     // full
     /*

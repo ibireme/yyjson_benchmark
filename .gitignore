@@ -91,3 +91,13 @@ iOSInjectionProject/
 .Spotlight-V100
 .Trashes
 Thumbs.db
+
+# Visual Studio
+packages
+.vs
+out
+x64
+Debug
+Release
+*.user
+CMakeSettings.json
