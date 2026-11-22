@@ -1,6 +1,10 @@
 cmake_minimum_required (VERSION 3.5)
 project (yyjson_benchmark)
 
+# Some vendored subprojects still declare cmake_minimum_required(<3.5);
+# CMake >= 4 refuses them unless this policy floor is set. Harmless on CMake 3.x.
+set(CMAKE_POLICY_VERSION_MINIMUM 3.5 CACHE INTERNAL "")
+
 
 # ------------------------------------------------------------------------------
 # build type

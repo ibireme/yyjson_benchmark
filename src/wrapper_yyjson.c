@@ -19,7 +19,7 @@ u64 reader_measure_yyjson(const char *json, size_t size, int repeat) {
     return benchmark_tick_min();
 }
 
-u64 reader_measure_yyjson_fast(const char *json, size_t size, int repeat) {
+u64 reader_measure_yyjson_insitu(const char *json, size_t size, int repeat) {
     benchmark_tick_init();
     
     yyjson_read_flag flag = YYJSON_READ_INSITU;
@@ -166,7 +166,7 @@ u64 stats_measure_yyjson(const char *json, size_t size, stats_data *data, int re
 }
 
 
-u64 stats_measure_yyjson_fast(const char *json, size_t size, stats_data *data, int repeat) {
+u64 stats_measure_yyjson_insitu(const char *json, size_t size, stats_data *data, int repeat) {
     benchmark_tick_init();
     
     yyjson_doc *doc = yyjson_read(json, size, YYJSON_READ_NOFLAG);

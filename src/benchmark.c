@@ -42,10 +42,10 @@ static void func_register_all(void) {
     
     
     // fast
-    register_reader(yyjson_fast); // validate_encoding, insitu, fast_fp
-    register_reader(yyjson);      // validate_encoding, full_precision_fp
-    register_writer(yyjson);      // immutable writer
-    register_stats(yyjson);       // stats recursive
+    register_reader(yyjson_insitu); // validate_encoding, insitu, pool allocator
+    register_reader(yyjson);        // validate_encoding, default allocator
+    register_writer(yyjson);        // immutable writer
+    register_stats(yyjson);         // stats recursive
     
 #if BENCHMARK_HAS_SIMDJSON
     register_reader(simdjson);
@@ -65,12 +65,12 @@ static void func_register_all(void) {
     
     // full
     /*
-    register_reader(yyjson_fast); // validate_encoding, insitu, fast_fp
-    register_reader(yyjson);      // validate_encoding, full_precision_fp
-    register_writer(yyjson);      // immutable writer
-    register_writer(yyjson_mut);  // mutable writer
-    register_stats(yyjson_fast);  // stats iterator
-    register_stats(yyjson);       // stats recursive
+    register_reader(yyjson_insitu); // validate_encoding, insitu, pool allocator
+    register_reader(yyjson);        // validate_encoding, default allocator
+    register_writer(yyjson);        // immutable writer
+    register_writer(yyjson_mut);    // mutable writer
+    register_stats(yyjson_insitu);  // stats iterator
+    register_stats(yyjson);         // stats recursive
 
 #if BENCHMARK_HAS_SIMDJSON
     register_reader(simdjson);
